@@ -1,35 +1,65 @@
-import Link from "next/link";
+"use client";
+
+import { NavBar } from "./components/NavBar";
+
+import { lessonInfo, contentBarInfo } from "./constants";
+
+import { FiChevronDown } from "react-icons/fi";
+import { useForm } from "react-hook-form";
+import type { SubmitErrorHandler, SubmitHandler } from "react-hook-form";
+import { lessonSchema } from "~/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form } from "./components/Form";
+
+import type { IField } from "~/schemas";
 
 export default function HomePage() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IField>({
+    resolver: zodResolver(lessonSchema),
+  });
+
+  const onSubmit: SubmitHandler<IField> = (data) => {
+    console.log(data);
+  };
+
+  const onError: SubmitErrorHandler<IField> = (data) => {
+    console.log(data);
+  };
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
-        <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-          Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
-        </h1>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="https://create.t3.gg/en/usage/first-steps"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">First Steps →</h3>
-            <div className="text-lg">
-              Just the basics - Everything you need to know to set up your
-              database and authentication.
-            </div>
-          </Link>
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="https://create.t3.gg/en/introduction"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">Documentation →</h3>
-            <div className="text-lg">
-              Learn more about Create T3 App, the libraries it uses, and how to
-              deploy it.
-            </div>
-          </Link>
+    <main className="checkerboard-bg relative flex min-h-screen w-full justify-center gap-6 bg-primary-400 font-aeonik text-white">
+      <NavBar />
+
+      <div className="flex w-full items-center justify-center">
+        <div className="flex flex-row gap-6 lg:w-[1024px]">
+          <Form
+            fieldInfo={lessonInfo}
+            handleSubmit={handleSubmit}
+            onSubmit={onSubmit}
+            onError={onError}
+            register={register}
+            Icon={FiChevronDown}
+            errors={errors}
+          />
+
+          <div className="flex w-2/3 flex-col gap-4 rounded-[15px] bg-[#ffdfcc] px-6 py-[30px]">
+            {contentBarInfo.map((cont) => {
+              return (
+                <div className="flex flex-row gap-[14px]" key={cont.number}>
+                  <div className="flex h-[51px] w-[51px] items-center justify-center rounded-[15px] bg-[#FF6F16] text-[38px]">
+                    {cont.number}
+                  </div>
+                  <p className="flex flex-1 items-center rounded-[15px] bg-white px-6 py-4 font-[24px] text-black">
+                    {cont.title}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </main>

@@ -1,3 +1,29 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.checkerboard-bg {
+  background-image: linear-gradient(#ff8300 1px, transparent 1px),
+    linear-gradient(to right, #ff8300 1px, #ff6100 1px);
+  background-size: 77px 77px;
+}
+
+@layer base {
+  @font-face {
+    font-family: "AeonikPro";
+    font-weight: 300;
+    src: url("/fonts/AeonikPro-Light.otf") format("opentype");
+  }
+
+  @font-face {
+    font-family: "AeonikPro";
+    font-weight: 400;
+    src: url("/fonts/AeonikPro-Regular.otf") format("opentype");
+  }
+
+  @font-face {
+    font-family: "AeonikPro";
+    font-weight: bold;
+    src: url("/fonts/AeonikPro-Bold.otf") format("opentype");
+  }
+}
