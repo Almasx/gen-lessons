@@ -2,9 +2,8 @@
 
 import { NavBar } from "./components/NavBar";
 
-import { lessonInfo, contentBarInfo } from "./constants";
+import { lessonInfo } from "./constants";
 
-import { FiChevronDown } from "react-icons/fi";
 import { useForm } from "react-hook-form";
 import { lessonSchema } from "~/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,6 +11,11 @@ import { Form } from "./components/Form";
 
 import type { IField } from "~/schemas";
 import type { SubmitErrorHandler, SubmitHandler } from "react-hook-form";
+import { PopulateContentBar } from "./components/PopulateContentBar";
+
+interface ApiResponse {
+  message: string;
+}
 
 export default function HomePage() {
   const {
@@ -22,12 +26,27 @@ export default function HomePage() {
     resolver: zodResolver(lessonSchema),
   });
 
-  const onSubmit: SubmitHandler<IField> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<IField> = async (data) => {
+    const response = await fetch("/api/gpt", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      console.log(response);
+      throw new Error(`Error! status: ${response.status}`);
+    }
+
+    const result = (await response.json()) as ApiResponse;
+
+    console.log(result);
   };
 
   const onError: SubmitErrorHandler<IField> = (data) => {
-    console.log(data);
+    console.error(data);
   };
 
   return (
@@ -39,29 +58,16 @@ export default function HomePage() {
           <div className="flex flex-col rounded-[15px] bg-[#ffdfcc] px-5 py-8 md:w-1/3">
             <Form
               fieldInfo={lessonInfo}
+              errors={errors}
+              buttonText={"Сгенерировать план урока"}
               handleSubmit={handleSubmit}
               onSubmit={onSubmit}
               onError={onError}
               register={register}
-              Icon={FiChevronDown}
-              errors={errors}
             />
           </div>
 
-          <div className="flex flex-col gap-4 rounded-[15px] bg-[#ffdfcc] px-6 py-[30px] md:w-2/3">
-            {contentBarInfo.map((cont) => {
-              return (
-                <div className="flex flex-row gap-[14px]" key={cont.number}>
-                  <div className="flex h-[51px] w-[51px] items-center justify-center rounded-[15px] bg-[#FF6F16] text-[38px]">
-                    {cont.number}
-                  </div>
-                  <p className="flex flex-1 items-center rounded-[15px] bg-white px-6 py-4 font-[24px] text-black">
-                    {cont.title}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
+          <PopulateContentBar />
         </div>
       </div>
     </main>

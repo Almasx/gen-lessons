@@ -27,20 +27,8 @@ export const lessonInfo: {
 ];
 
 export const contentBarInfo = [
-  {
-    number: 1,
-    title: "Знакомство",
-  },
-  {
-    number: 2,
-    title: "Знакомство",
-  },
-  {
-    number: 3,
-    title: "Знакомство",
-  },
-  {
-    number: 4,
-    title: "Знакомство",
-  },
+  { id: 0, title: "Знакомство" },
+  { id: 1, title: "Информация" },
+  { id: 3, title: "Задание" },
+  { id: 4, title: "Заключение" },
 ];

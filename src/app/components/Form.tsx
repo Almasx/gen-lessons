@@ -1,6 +1,5 @@
 import cn from "classnames";
 
-import type { IconType } from "react-icons";
 import type { IField } from "~/schemas";
 
 import type {
@@ -18,22 +17,22 @@ type FormProps = {
     placeholder: string;
     name: keyof IField;
   }[];
+  buttonText: string;
   errors: FieldErrors<IField>;
   register: UseFormRegister<IField>;
   handleSubmit: UseFormHandleSubmit<IField>;
   onSubmit: SubmitHandler<IField>;
   onError: SubmitErrorHandler<IField>;
-  Icon: IconType;
 };
 
 export const Form = ({
   fieldInfo,
   errors,
+  buttonText,
   register,
   onSubmit,
   onError,
   handleSubmit,
-  Icon,
 }: FormProps) => {
   return (
     <form
@@ -81,8 +80,7 @@ export const Form = ({
       })}
 
       <button className="flex w-full flex-row items-center justify-center gap-4 rounded-[8px] bg-black py-[17px] text-white">
-        <p className="text-[20px]">Ракетостроение</p>
-        <Icon />
+        <p className="text-[20px]">{buttonText}</p>
       </button>
     </form>
   );
