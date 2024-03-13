@@ -14,8 +14,7 @@ export default {
 
     extend: {
       fontFamily: {
-        sans: ["var(--font-sans)", ...fontFamily.sans],
-        aeonik: ["AeonikPro", "sans-serif"],
+        sans: ["AeonikPro", ...fontFamily.sans],
       },
 
       colors: {
