@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const block = z.object({ title: z.string(), content: z.string().optional(), timeframe: z.string(), id: z.string() })
+const block = z.object({ title: z.string(), content: z.string().optional(), timeframe: z.string(), })
 
 export const lesson = z.record(block)
 

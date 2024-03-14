@@ -1,6 +1,6 @@
 "use server";
 
-import { nanoid } from 'nanoid';
+import { customAlphabet } from 'nanoid';
 import { z } from "zod";
 import { completion } from "zod-gpt";
 import { env } from "~/env";
@@ -39,17 +39,19 @@ export const startEngine = action(z.object({
     blocks: z.array(z.string()),
 }), async ({ blocks }) => {
 
-    console.log(blocks)
+    const nanoid = customAlphabet('1234567890abcdef', 10)
 
-    for (let block of blocks) {
+    const lessonId = nanoid()
+    const data = blocks.reduce((acc, block) => ({ ...acc, [nanoid()]: { title: block, content: null } }), {})
+
+    for (let [id, block] of Object.entries<{ title: string }>(data)) {
         await mq.publishJSON({
             url: `${env.NEXTAUTH_URL}/api/blocks`,
-            body: { title: block },
+            body: { title: block.title, id, lessonId },
         })
     }
 
-    const id = nanoid()
-    await kv.hset(`lesson-${id}`, blocks.reduce((acc, block) => ({ ...acc, [nanoid()]: { title: block } }), {}))
+    await kv.json.set(`lesson-${lessonId}`, "$", data)
 
-    return id
+    return lessonId
 });

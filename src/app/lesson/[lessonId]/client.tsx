@@ -25,9 +25,9 @@ export const LessonSlides = ({ lesson }: { lesson: Lesson }) => {
 
 const Slide = ({ slide }: { slide: Block }) => {
     return <div className="bg-white/80 backdrop-blur-md rounded-2xl p-2 grow">
-        <div className="bg-white flex flex-col relative rounded-2xl p-12 pt-16 min-h-[600px] text-black">
+        <div className="bg-white flex flex-col relative rounded-2xl p-12 pt-16 min-h-[600px] text-black gap-6">
             <div className="absolute left-12 text-white top-0 -translate-y-1/2 rounded-xl bg-secondary px-4 py-2">6-10 минуты</div>
-            <h1 className="text-6xl font-bold">{slide.title}</h1>
+            <h1 className="text-6xl font-bold ">{slide.title}</h1>
             {slide.content ? <p className="">{slide.content}</p> : <div className="flex flex-col mt-12 gap-4">
                 <Skeleton className="h-4 w-full" />
                 <Skeleton className="h-4 w-[90%]" />
