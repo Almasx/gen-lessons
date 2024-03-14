@@ -1,7 +1,7 @@
 import "~/styles/globals.css";
 
-import Image from 'next/image';
-import Link from 'next/link';
+import Image from "next/image";
+import Link from "next/link";
 
 export const metadata = {
   title: "Create T3 App",
@@ -16,12 +16,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="font-sans checkerboard-bg relative flex min-h-screen w-full
-                       justify-center gap-6 bg-primary-400 font-aeonik text-white pt-28 ">
-
+      <body
+        className="checkerboard-bg font-aeonik relative flex min-h-screen w-full
+                       justify-center bg-primary-400 pt-28 font-sans text-white "
+      >
         <nav
-          className="bg-primary-400/70 fixed inset-x-4 top-6 z-20 flex h-16 place-items-center
-             justify-between rounded-xl px-3 text-sm backdrop-blur-sm md:px-8 md:text-base lg:inset-x-auto lg:mx-auto lg:w-[1024px]"
+          className="fixed inset-x-4 top-6 z-20 flex h-16 place-items-center justify-between
+             rounded-xl bg-primary-400/70 px-3 text-sm backdrop-blur-sm md:px-8 md:text-base lg:inset-x-auto lg:mx-auto lg:w-[1024px]"
         >
           <a href="/" className="flex items-center gap-3">
             <Image src="/favicon.svg" alt="logo" width={24} height={18} />
@@ -32,15 +33,17 @@ export default function RootLayout({
 
           <div className="flex items-center justify-end gap-3 justify-self-end">
             <ul className="flex gap-4">
-              {Object.entries(["О конкурсе", "Контакты"]).map(([lang, label]) => (
-                <Link href={"nowhere"} key={label}>
-                  {label}
-                </Link>
-              ))}
+              {Object.entries(["О конкурсе", "Контакты"]).map(
+                ([lang, label]) => (
+                  <Link href={"nowhere"} key={label}>
+                    {label}
+                  </Link>
+                ),
+              )}
             </ul>
           </div>
         </nav>
-        <div className="w-[1024px] mx-auto">{children}</div>
+        <div className="mx-auto w-[1024px]">{children}</div>
       </body>
     </html>
   );
