@@ -9,33 +9,42 @@ import { Reorder } from "framer-motion";
 import { useState } from "react";
 
 import { useAction } from "next-safe-action/hooks";
+import { useRouter } from "next/navigation";
 import { FiPlus, FiX } from "react-icons/fi";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "~/components/form";
 import { Input } from "~/components/input";
-import { createDraft } from "./action";
+import { Spinner } from "~/components/loaders";
+import { Textarea } from "~/components/text-area";
+import { createDraft, startEngine } from "./action";
 
 export const lessonSchema = z.object({
   title: z.string().min(1, "Напишите тему урока"),
   goals: z.string().min(1, "Напишите цели урока"),
-  notes: z.string().min(1, "Ваши рекомендации"),
+  notes: z.string().optional(),
 });
 
 export type LessonSchema = z.infer<typeof lessonSchema>;
 
 export default function HomePage() {
+  const { push } = useRouter()
   const form = useForm<LessonSchema>({
     resolver: zodResolver(lessonSchema),
   });
 
-  const { execute, result } = useAction(createDraft)
+  const { execute: draft, result, status } = useAction(createDraft)
+  const { execute: start, status: engineStatus } = useAction(startEngine, {
+    onSuccess: (data) => {
+      push(`/lesson/${data}`)
+    }
+  })
 
   return (
-    <div className="flex w-full items-center justify-center">
-      <div className="flex w-[90%] flex-col-reverse gap-6 md:flex-row lg:w-[1024px]">
+    <div className="flex flex-col gap-4">
+      <div className="flex w-[90%] flex-col-reverse gap-6 md:flex-row lg:w-full">
         <Form {...form}>
           <form
             className="flex flex-col justify-between gap-5 p-5 pt-8 md:w-1/3 bg-white/80 backdrop-blur-md rounded-xl mb-auto"
-            onSubmit={form.handleSubmit((data) => execute(data))}
+            onSubmit={form.handleSubmit((data) => draft(data))}
           >
             <FormField
               control={form.control}
@@ -46,7 +55,7 @@ export default function HomePage() {
                   <FormControl>
                     <Input
                       placeholder="Тема урока"
-                      className="p-6 border-neutral-300 bg-white  rounded-xl placeholder:text-neutral-400"
+                      className="p-6 border-neutral-300 bg-white  rounded-xl placeholder:text-neutral-400 text-black"
                       {...field}
                     />
                   </FormControl>
@@ -62,9 +71,10 @@ export default function HomePage() {
                 <FormItem>
                   <FormLabel className=" text-neutral-400">Цели</FormLabel>
                   <FormControl>
-                    <Input
+                    <Textarea
+                      rows={2}
                       placeholder="Цели урока"
-                      className="p-6 border-neutral-300 bg-white  rounded-xl placeholder:text-neutral-400"
+                      className="p-6 border-neutral-300 bg-white  rounded-xl placeholder:text-neutral-400  text-black"
                       {...field}
                     />
                   </FormControl>
@@ -80,9 +90,10 @@ export default function HomePage() {
                 <FormItem>
                   <FormLabel className=" text-neutral-400">Дополнительные комментарий</FormLabel>
                   <FormControl>
-                    <Input
+                    <Textarea
+                      rows={4}
                       placeholder="Дополнительные комментарий"
-                      className="p-6 border-neutral-300 bg-white  rounded-xl placeholder:text-neutral-400"
+                      className="p-6 border-neutral-300 bg-white  rounded-xl placeholder:text-neutral-400  text-black"
                       {...field}
                     />
                   </FormControl>
@@ -91,14 +102,24 @@ export default function HomePage() {
                 </FormItem>
               )}
             />
-            <button className="flex items-center justify-center rounded-xl bg-black p-3  text-white">
-              Сгенерировать план урока
+            <button className="flex items-center justify-center rounded-xl bg-black h-14 overflow-clip gap-3 p-3  text-white disabled:text-white/60" disabled={status === "executing"}>
+              {status === 'executing' && <div className="-m-3"><Spinner /></div>} Сгенерировать план урока
             </button>
           </form>
         </Form>
 
-        {result.data ? <ContentPlan data={result.data} /> : <div className="bg-white/80 rounded-xl backdrop-blur-md grow text-neutral-400 text-3xl grid place-items-center">No drafts yet...</div>}
+        {status === 'idle' && <div className="bg-white/80 rounded-xl backdrop-blur-md grow text-neutral-400 text-3xl grid place-items-center">No drafts yet...</div>}
+        {status === 'executing' && <div className="bg-white/80 rounded-xl backdrop-blur-md grow text-neutral-400 text-3xl grid place-items-center">Creating draft ...</div>}
+        {status === 'hasSucceeded' && <ContentPlan data={result.data!} />}
       </div>
+
+      {status === 'hasSucceeded' &&
+        <button onClick={() => start({ blocks: result.data!.map(block => block.title) })}
+          className="flex items-center justify-center rounded-xl bg-white/80 backdrop-blur-md 
+                     text-primary-400  h-14 overflow-clip gap-3 p-3 disabled:text-white/60 ml-auto" >
+          {engineStatus === 'executing' && <div className="-m-3"><Spinner /></div>} Продожить →
+        </button>
+      }
     </div>
   );
 }
@@ -155,8 +176,8 @@ const ContentPlan = ({ data }: { data: { title: string }[] }) => {
           <FiPlus />
         </div>
 
-        <Input placeholder="Добавить новый блок" className="p-6 border-neutral-300 bg-white  rounded-xl placeholder:text-neutral-400"
-
+        <Input placeholder="Добавить новый блок"
+          className="p-6 border-neutral-300 bg-white  rounded-xl placeholder:text-neutral-400  text-black"
           value={newTitle}
           onChange={(e) => setNewTitle(e.target.value)} />
       </div>

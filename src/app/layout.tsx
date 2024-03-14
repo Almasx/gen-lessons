@@ -1,13 +1,7 @@
 import "~/styles/globals.css";
 
-import { Inter } from "next/font/google";
 import Image from 'next/image';
 import Link from 'next/link';
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
 
 export const metadata = {
   title: "Create T3 App",
@@ -22,7 +16,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`font-sans ${inter.variable} checkerboard-bg relative flex min-h-screen w-full justify-center gap-6 bg-primary-400 font-aeonik text-white `}>
+      <body className="font-sans checkerboard-bg relative flex min-h-screen w-full
+                       justify-center gap-6 bg-primary-400 font-aeonik text-white pt-28 ">
 
         <nav
           className="bg-primary-400/70 fixed inset-x-4 top-6 z-20 flex h-16 place-items-center
@@ -45,7 +40,7 @@ export default function RootLayout({
             </ul>
           </div>
         </nav>
-        {children}
+        <div className="w-[1024px] mx-auto">{children}</div>
       </body>
     </html>
   );
