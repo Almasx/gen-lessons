@@ -9,6 +9,8 @@ export default async function LessonPage({
   params: { lessonId: string };
 }) {
   const lesson = await kv.json.get<Lesson>(`lesson-${params.lessonId}`);
+
+  console.log(lesson);
   if (!lesson) redirect("404");
   return <LessonSlides lesson={lesson} />;
 }

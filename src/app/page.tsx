@@ -32,7 +32,7 @@ export const lessonSchema = z.object({
 export type LessonSchema = z.infer<typeof lessonSchema>;
 
 export default function HomePage() {
-  const { push } = useRouter();
+  const router = useRouter();
   const form = useForm<LessonSchema>({
     resolver: zodResolver(lessonSchema),
   });
@@ -40,16 +40,21 @@ export default function HomePage() {
   const { execute: draft, result, status } = useAction(createDraft);
   const { execute: start, status: engineStatus } = useAction(startEngine, {
     onSuccess: (data) => {
-      push(`/lesson/${data}`);
+      router.push(`/lesson/${data}`);
+    },
+    onError: (err) => {
+      console.log(err);
     },
   });
+
+  console.log(result);
 
   return (
     <div className="flex flex-col items-center gap-4">
       <div className="flex w-[90%] flex-col-reverse gap-6 md:flex-row lg:w-full">
         <Form {...form}>
           <form
-            className="mb-auto flex flex-col justify-between gap-5 rounded-xl bg-white/80 p-3 md:p-5 pt-8 backdrop-blur-md md:w-1/3"
+            className="mb-auto flex flex-col justify-between gap-5 rounded-xl bg-white/80 p-3 pt-8 backdrop-blur-md md:w-1/3 md:p-5"
             onSubmit={form.handleSubmit((data) => draft(data))}
           >
             <FormField
@@ -125,7 +130,7 @@ export default function HomePage() {
         </Form>
 
         {status === "idle" && (
-          <div className="grid grow place-items-center rounded-xl bg-white/80 text-xl sm:text-2xl md:text-3xl text-neutral-400 backdrop-blur-md">
+          <div className="grid grow place-items-center rounded-xl bg-white/80 text-xl text-neutral-400 backdrop-blur-md sm:text-2xl md:text-3xl">
             No drafts yet...
           </div>
         )}
@@ -139,9 +144,7 @@ export default function HomePage() {
 
       {status === "hasSucceeded" && (
         <button
-          onClick={() =>
-            start({ blocks: result.data!.map((block) => block.title) })
-          }
+          onClick={() => start({ blocks: result.data! })}
           className="ml-auto flex h-14 items-center justify-center gap-3 
                      overflow-clip  rounded-xl bg-white/80 p-3 text-primary-400 backdrop-blur-md disabled:text-white/60"
         >
@@ -160,9 +163,14 @@ export default function HomePage() {
 type Block = {
   id: number;
   title: string;
+  timeframe: number;
 };
 
-const ContentPlan = ({ data }: { data: { title: string }[] }) => {
+const ContentPlan = ({
+  data,
+}: {
+  data: { title: string; timeframe: number }[];
+}) => {
   const [content, setContent] = useState(
     data.map((block, index) => ({ ...block, id: index })),
   );
@@ -184,6 +192,7 @@ const ContentPlan = ({ data }: { data: { title: string }[] }) => {
       const newContent = {
         id: 1,
         title: newTitle,
+        timeframe: 0,
       };
 
       setContent([newContent, ...updatedContent]);
@@ -227,7 +236,10 @@ const ContentPlan = ({ data }: { data: { title: string }[] }) => {
         {content.map((cont, index) => {
           return (
             <Reorder.Item key={index} value={cont}>
-              <div className="flex cursor-pointer flex-row gap-4" key={cont.id}>
+              <div
+                className="flex cursor-pointer flex-row gap-4"
+                key={cont?.id}
+              >
                 <div
                   className="flex aspect-square h-12 w-12  items-center justify-center rounded-xl bg-primary-400 text-[38px]"
                   onMouseEnter={() => setHoveredIndex(index)}
@@ -241,6 +253,10 @@ const ContentPlan = ({ data }: { data: { title: string }[] }) => {
                   <p className="flex flex-1 items-center px-6  font-[24px] text-black">
                     {cont?.title}
                   </p>
+
+                  <div className="mr-2 rounded-2xl bg-[#019683] px-3 py-1">
+                    {cont?.timeframe}
+                  </div>
                 </div>
               </div>
             </Reorder.Item>

@@ -35,7 +35,7 @@ const Slide = ({ slide }: { slide: Block }) => {
     <div className="grow rounded-2xl bg-white/80 p-2 backdrop-blur-md">
       <div className="relative flex min-h-[600px] flex-col gap-6 rounded-2xl bg-white p-6 py-8 text-black md:p-12 md:pt-16">
         <div className="absolute left-12 top-0 -translate-y-1/2 rounded-xl bg-secondary px-4 py-2 text-white">
-          6-10 минуты
+          {slide.timeframe} минут
         </div>
         <h1 className="text-4xl font-bold md:text-6xl ">{slide.title}</h1>
         {slide.content ? (
