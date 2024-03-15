@@ -3,6 +3,7 @@ import { z } from "zod";
 import { completion } from "zod-gpt";
 import { kv } from "~/lib/kv";
 import { openai } from "~/lib/openai";
+import { pusher } from "~/lib/pusher";
 
 export const { POST } = route({
   process: routeOperation({
@@ -41,6 +42,8 @@ export const { POST } = route({
           }),
         },
       );
+
+      await pusher.trigger(`slide-${id}`, 'update-content', response.data.content)
 
       await kv.json.set(
         `lesson-${lessonId}`,

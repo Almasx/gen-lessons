@@ -23,10 +23,15 @@ export const env = createEnv({
     ),
     DISCORD_CLIENT_ID: z.string(),
     DISCORD_CLIENT_SECRET: z.string(),
+
     OPENAI_API_KEY: z.string(),
+
     QSTASH_TOKEN: z.string(),
     QSTASH_CURRENT_SIGNING_KEY: z.string(),
-    QSTASH_NEXT_SIGNING_KEY: z.string()
+    QSTASH_NEXT_SIGNING_KEY: z.string(),
+
+    PUSHER_APP_ID: z.string(),
+    PUSHER_APP_SECRET: z.string(),
   },
 
   /**
@@ -35,7 +40,9 @@ export const env = createEnv({
    * `NEXT_PUBLIC_`.
    */
   client: {
-    // NEXT_PUBLIC_CLIENTVAR: z.string(),
+    NEXT_PUBLIC_PUSHER_APP_KEY: z.string(),
+    NEXT_PUBLIC_PUSHER_SERVER_TLS: z.string(),
+    NEXT_PUBLIC_PUSHER_CLUSTER: z.string(),
   },
 
   /**
@@ -51,7 +58,14 @@ export const env = createEnv({
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     QSTASH_TOKEN: process.env.QSTASH_TOKEN,
     QSTASH_CURRENT_SIGNING_KEY: process.env.QSTASH_CURRENT_SIGNING_KEY,
-    QSTASH_NEXT_SIGNING_KEY: process.env.QSTASH_NEXT_SIGNING_KEY
+    QSTASH_NEXT_SIGNING_KEY: process.env.QSTASH_NEXT_SIGNING_KEY,
+
+    PUSHER_APP_ID: process.env.PUSHER_APP_ID,
+    PUSHER_APP_SECRET: process.env.PUSHER_APP_SECRET,
+
+    NEXT_PUBLIC_PUSHER_APP_KEY: process.env.NEXT_PUBLIC_PUSHER_APP_KEY,
+    NEXT_PUBLIC_PUSHER_SERVER_TLS: process.env.NEXT_PUBLIC_PUSHER_SERVER_TLS,
+    NEXT_PUBLIC_PUSHER_CLUSTER: process.env.NEXT_PUBLIC_PUSHER_CLUSTER
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

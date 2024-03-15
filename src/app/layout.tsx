@@ -32,14 +32,10 @@ export default function RootLayout({
           </a>
 
           <div className="flex items-center justify-end gap-3 justify-self-end">
-            <ul className="flex gap-4">
-              {Object.entries(["О конкурсе", "Контакты"]).map(
-                ([lang, label]) => (
-                  <Link href={"nowhere"} key={label}>
-                    {label}
-                  </Link>
-                ),
-              )}
+            <ul className="flex gap-4 items-center">
+              <span>О конкурсе</span>
+              <span>Контакты</span>
+              <Link className="rounded-xl bg-white text-primary-500 px-4 py-2" href={'draft'}>Create lesson</Link>
             </ul>
           </div>
         </nav>
