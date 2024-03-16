@@ -70,7 +70,7 @@ export const startEngine = action(
       timeframe: number;
     }>(data)) {
       await mq.publishJSON({
-        url: `${env.NEXTAUTH_URL}/api/blocks`,
+        url: `https://${env.NEXTAUTH_URL}/api/blocks`,
         body: { title: block.title, timeframe: block.timeframe, id, lessonId },
       });
     }
