@@ -18,7 +18,7 @@ export const createDraft = action(
   async ({ goals, notes, title }) => {
     const response = await completion(
       openai,
-      `Generate a 4-7 short steps on how to: ${goals} and provide approximate time to complete these steps. You must create such steps that require only 5-15 minutes, and in total should consist of 40 minutes`,
+      `Generate a 4-7 short steps on ${title} based on these objectives: ${goals} and provide approximate time to complete these steps. You must create such steps that require only 5-15 minutes, and in total should consist of 40 minutes. Notes: '${notes}'`,
       {
         schema: z.object({
           plan: z.array(
