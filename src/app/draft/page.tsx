@@ -23,13 +23,13 @@ import { Input } from "~/components/input";
 import { Spinner } from "~/components/loaders";
 import { Textarea } from "~/components/text-area";
 
-export const lessonSchema = z.object({
+const lessonSchema = z.object({
   title: z.string().min(1, "Напишите тему урока"),
   goals: z.string().min(1, "Напишите цели урока"),
   notes: z.string().optional(),
 });
 
-export type LessonSchema = z.infer<typeof lessonSchema>;
+type LessonSchema = z.infer<typeof lessonSchema>;
 
 export default function HomePage() {
   const router = useRouter();

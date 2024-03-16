@@ -2,8 +2,6 @@ import Link from "next/link"
 import { kv } from "~/lib/kv"
 import { Lesson } from "~/lib/kv/schema"
 
-
-
 export default async function HomePage() {
 
   const [newCursor, keys] = await kv.scan(0, { match: `lesson-*` })
